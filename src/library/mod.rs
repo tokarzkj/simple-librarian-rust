@@ -2,11 +2,10 @@ pub mod library_system {
     pub struct Librarian {
         pub books_available: Vec<String>,
         pub checked_out: Vec<String>,
-        pub number_of_books: i32,
     }
 
     impl Librarian {
-        fn number_of_books(&self) -> usize {
+        pub fn number_of_books(&self) -> usize {
             self.books_available.len()
         }
 
@@ -23,14 +22,23 @@ pub mod library_system {
 
 #[cfg(test)]
 pub mod tests {
+    fn setup() -> super::library_system::Librarian {
+        super::library_system::Librarian {
+            books_available: vec![String::from("Lord of the Rings"), String::from("The Three Body Problem")],
+            checked_out: Vec::new(),
+        }
+    }
+
+    #[test]
+    fn book_count() {
+        let l = setup();
+
+        assert_eq!(l.number_of_books(), 2);
+    }
 
     #[test]
     fn checkout_book() {
-        let mut l = super::library_system::Librarian {
-            books_available: vec![String::from("Lord of the Rings"), String::from("The Three Body Problem")],
-            checked_out: Vec::new(),
-            number_of_books: 1,
-        };
+        let mut l = setup();
 
         l.checkout_book(String::from("Lord of the Rings"));
 

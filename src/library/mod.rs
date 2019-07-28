@@ -39,9 +39,16 @@ pub mod tests {
     #[test]
     fn checkout_book() {
         let mut l = setup();
-
         l.checkout_book(String::from("Lord of the Rings"));
 
         assert_eq!(l.checked_out.contains(&String::from("Lord of the Rings")), true);
+    }
+
+    #[test]
+    fn checkout_invalid_book() {
+        let mut l = setup();
+
+        l.checkout_book(String::from("The Lord of the Flies"));
+        assert_eq!(l.checked_out.contains(&String::from("The Lord of the Flies")), false);
     }
 }

@@ -17,6 +17,10 @@ pub mod lib {
         }
 
         fn checkout_book(&mut self, title: String) {
+            if self.checked_out.contains(&title) {
+                return
+            }
+
             self.checked_out.push(title);
         }
     }

@@ -9,9 +9,11 @@ fn main() {
         .read_line(&mut book)
         .expect("Entered invalid input");
 
-    let l = library::lib::Librarian {
+    let mut l = library::library_system::Librarian {
         books_available: Vec::new(),
         checked_out: Vec::new(),
         number_of_books: 1,
     };
+
+    l.checkout_book(String::from("Test"));
 }

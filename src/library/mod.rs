@@ -1,4 +1,7 @@
 pub mod library_system {
+    use std::error::Error;
+    use std::fmt;
+
     pub struct Librarian {
         pub books_available: Vec<String>,
         pub checked_out: Vec<String>,
@@ -9,13 +12,42 @@ pub mod library_system {
             self.books_available.len()
         }
 
-        pub fn checkout_book(&mut self, title: String) {
-            if !self.books_available.contains(&title) 
-                || self.checked_out.contains(&title) {
-                return
+        pub fn checkout_book(&mut self, title: String) -> Result<(), LibrarianError> {
+            if !self.books_available.contains(&title) {
+                return Err::<(), LibrarianError>(LibrarianError::new("Book isn't available"))
+            }
+
+            if self.checked_out.contains(&title) {
+                return Err::<(), LibrarianError>(LibrarianError::new("Book is already checked out"))
             }
 
             self.checked_out.push(title);
+            Ok(())
+        }
+    }
+
+    #[derive(Debug)]
+    pub struct LibrarianError {
+        details: String,
+    }
+
+    impl LibrarianError {
+        fn new(msg: &str) -> LibrarianError {
+            LibrarianError {
+                details: msg.to_string()
+            }
+        }
+    }
+
+    impl fmt::Display  for LibrarianError {
+        fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+            write!(f, "{}", self.details)
+        }
+    }
+
+    impl Error for LibrarianError {
+        fn description(&self) -> &str {
+            &self.details
         }
     }
 }

@@ -10,19 +10,21 @@ fn main() {
     let mut continue_prompting = true;
 
     while continue_prompting {
-        let mut book = String::new();
+        let mut input = String::new();
         io::stdin()
-            .read_line(&mut book)
+            .read_line(&mut input)
             .expect("Entered invalid input");
 
-        if book == "quit" || book == "q" {
-            continue_prompting = true;
+        input = input.trim_end().to_string();
+
+        if input == "quit" || input == "q" {
+            continue_prompting = false;
             continue;
         }
 
-        println!("I am checking to see if {} is available", book);
+        println!("I am checking to see if {} is available", input);
 
-        let result = l.checkout_book(book);
+        let result = l.checkout_book(input);
 
         match result {
             Ok(r) => r,
@@ -34,6 +36,8 @@ fn main() {
         println!("Your currently checked out books are: ");
         println!("{}", l.get_checkedout_books());
     }
+
+    std::process::exit(0)
 }
 
 fn get_librarian() -> library::library_system::Librarian {

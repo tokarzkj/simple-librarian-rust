@@ -24,6 +24,17 @@ pub mod library_system {
             self.checked_out.push(title);
             Ok(())
         }
+
+        pub fn get_checkedout_books(&self) -> String {
+            let mut books = String::from("");
+
+            for book in &self.checked_out {
+                books.push_str(book);
+                books.push_str("\n");
+            };
+
+            books
+        }
     }
 
     #[derive(Debug)]

@@ -17,7 +17,7 @@ fn main() {
 
         input = input.trim_end().to_string();
 
-        if input == "quit" || input == "q" {
+        if input.to_lowercase() == "quit" || input.to_lowercase() == "q" {
             continue_prompting = false;
             continue;
         }
@@ -29,7 +29,7 @@ fn main() {
         match result {
             Ok(r) => r,
             Err(error) => {
-                println!("There was an error, {}", error)
+                println!("{}", error)
             }
         };
 

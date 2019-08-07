@@ -35,6 +35,20 @@ pub mod library_system {
 
             books
         }
+
+        pub fn return_book(&mut self, title: String) -> Result<&str, LibrarianError> {
+            if !self.checked_out.contains(&title) {
+                return Err::<&str, LibrarianError>(LibrarianError::new("That title wasn't checked out"));
+            }
+
+            let book_index = match self.checked_out.binary_search(&title) {
+                Ok(index) => index,
+                Err(e) => e
+            };
+
+            self.checked_out.remove(book_index);
+            Ok("Thank you for returning your book!")
+        }
     }
 
     #[derive(Debug)]
@@ -82,7 +96,7 @@ pub mod tests {
     #[test]
     fn checkout_book() {
         let mut l = setup();
-        l.checkout_book(String::from("Lord of the Rings"));
+        l.checkout_book(String::from("Lord of the Rings")).unwrap();
 
         assert_eq!(l.checked_out.contains(&String::from("Lord of the Rings")), true);
     }
@@ -91,7 +105,24 @@ pub mod tests {
     fn checkout_invalid_book() {
         let mut l = setup();
 
-        l.checkout_book(String::from("The Lord of the Flies"));
+        l.checkout_book(String::from("The Lord of the Flies")).unwrap();
         assert_eq!(l.checked_out.contains(&String::from("The Lord of the Flies")), false);
+    }
+
+    #[test]
+    fn return_book() {
+        let mut l = setup();
+
+        l.checkout_book(String::from("Lord of the Rings")).unwrap();
+        let response = l.return_book(String::from("Lord of the Rings")).unwrap();
+        
+        assert_eq!(response, "Thank you for returning your book!");
+    }
+
+    #[test]
+    #[should_panic]
+    fn return_book_not_checked_out() {
+        let mut l = setup();
+        l.return_book(String::from("The Lord Of The Rings")).unwrap();
     }
 }

@@ -12,17 +12,17 @@ pub mod library_system {
             self.books_available.len()
         }
 
-        pub fn checkout_book(&mut self, title: String) -> Result<(), LibrarianError> {
+        pub fn checkout_book(&mut self, title: String) -> Result<&str, LibrarianError> {
             if !self.books_available.contains(&title) {
-                return Err::<(), LibrarianError>(LibrarianError::new("Book isn't available"))
+                return Err::<&str, LibrarianError>(LibrarianError::new("Book isn't available"))
             }
 
             if self.checked_out.contains(&title) {
-                return Err::<(), LibrarianError>(LibrarianError::new("Book is already checked out"))
+                return Err::<&str, LibrarianError>(LibrarianError::new("Book is already checked out"))
             }
 
             self.checked_out.push(title);
-            Ok(())
+            Ok("The book is all yours!")
         }
 
         pub fn get_checkedout_books(&self) -> String {
@@ -102,11 +102,10 @@ pub mod tests {
     }
 
     #[test]
+    #[should_panic]
     fn checkout_invalid_book() {
         let mut l = setup();
-
         l.checkout_book(String::from("The Lord of the Flies")).unwrap();
-        assert_eq!(l.checked_out.contains(&String::from("The Lord of the Flies")), false);
     }
 
     #[test]

@@ -12,6 +12,17 @@ pub mod library_system {
             self.books_available.len()
         }
 
+        pub fn get_list_of_books(&self) -> String {
+            let mut books = String::from("");
+
+            for book in &self.books_available {
+                books.push_str(book);
+                books.push('\n');
+            }
+
+            books
+        }
+
         pub fn checkout_book(&mut self, title: String) -> Result<&str, LibrarianError> {
             if !self.books_available.contains(&title) {
                 return Err::<&str, LibrarianError>(LibrarianError::new("Book isn't available"))
@@ -99,6 +110,13 @@ pub mod tests {
         l.checkout_book(String::from("Lord of the Rings")).unwrap();
 
         assert_eq!(l.checked_out.contains(&String::from("Lord of the Rings")), true);
+    }
+
+    #[test]
+    fn list_books() {
+        let l = setup();
+        let books = l.get_list_of_books();
+        assert_eq!(books, "Lord of the Rings\nThe Three Body Problem\n");
     }
 
     #[test]

@@ -26,14 +26,16 @@ fn main() {
             continue;
         }
 
-        println!("What book would you like to {}?\r\n", command);
-
         let mut input = String::new();
-        io::stdin()
+        if do_prompt_for_book(&command) {
+            println!("What book would you like to {}?\r\n", command);
+        
+            io::stdin()
             .read_line(&mut input)
             .expect("Entered invalid input");
 
-        input = input.trim_end().to_string();
+            input = input.trim_end().to_string();
+        }
 
         l = execute_command(l, &command, &input);
 
@@ -63,6 +65,10 @@ fn execute_command(mut l : library::library_system::Librarian,
               }
           };
         },
+        "list" => {
+          let result = l.get_list_of_books();
+          println!("{}\r\n", result);
+        },
         _ => println!("Sorry I don't understand")
     };
 
@@ -76,4 +82,15 @@ fn get_librarian() -> library::library_system::Librarian {
         books_available: books,
         checked_out: Vec::new()
     }
+}
+
+fn do_prompt_for_book(command : &str) -> bool {
+    let do_prompt_for_book = match command {
+        "checkout" => true,
+        "return" => true,
+        "list" => false,
+        _ => false
+    };
+
+    do_prompt_for_book
 }
